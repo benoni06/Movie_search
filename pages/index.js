@@ -69,7 +69,7 @@ export default function Home() {
 							<Link href={`https://www.imdb.com/title/${movieInfo.imdbID}`}>
 								<a>
 									<button >
-										Visit on IMDB
+										IMDB
 									</button>
 								</a>
 							</Link>
