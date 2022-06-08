@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { useEffect } from "react";
 import { MovieList } from "./MovieList";
 import list from './movieList.json';
 
@@ -9,8 +10,8 @@ export default function Home() {
   const [movieInfo, setMovieInfo] = useState(null);
   const [isLoading,setisLoading] = useState(false);
   const [isError,setError]=useState(false);
+  const [Info,setInfo]=useState([])
  
-  let details = JSON.parse(JSON.stringify(list));
   const fetchMovieInfo = () => {
     try {
 		setisLoading =true;
@@ -30,6 +31,30 @@ export default function Home() {
       setError=true;
     }
   };
+  const fetchInfo = () => {
+    try {
+		setisLoading =true;
+      axios
+        .get(`http://localhost:3000/movie/all`,{
+          headers:{
+            'Content-type':'application/json','Access-Control-Allow-Origin':'*'
+          }
+        })
+        .then((response) => {
+          let result = JSON.parse(JSON.stringify(response));
+		      let {data}=result
+          console.log(data);
+          setInfo(data);
+  });
+}
+     catch(err)
+     {console.log(err);
+    }
+  }
+     
+   useEffect(()=>{
+     fetchInfo();
+    },[])
 
   return (
     <div className="centered">
@@ -49,7 +74,7 @@ export default function Home() {
 	    {isLoading?<p>Loading</p>:null}
 		{isError?<p>no Movies found</p>:null}
       <div>
-        {movieInfo ?<MovieList details={movieInfo}/>:<MovieList details={details} />}
+        {movieInfo ?<MovieList details={movieInfo}/>:<MovieList details={Info} />}
       </div>
       
     </div>
